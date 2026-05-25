@@ -1,0 +1,50 @@
+spack:
+  view: false
+  concretizer:
+    unify: when_possible
+    reuse: false
+  specs:
+  - nvhpc@25.11 +mpi +blas +lapack default_cuda=12.2
+  - openblas@0.3.26 threads=openmp
+  - openmpi@4.1.6 +cuda cuda_arch=80 +legacylaunchers
+  - nccl@2.22.3-1 +cuda cuda_arch=80
+  - cudnn@8.9.7.29-12
+  - hdf5@1.14.3 +mpi +fortran +hl
+  - parallel-netcdf@1.12.3 +cxx +fortran
+  packages:
+    all:
+      target: [icelake]
+      providers:
+        mpi: [openmpi]
+        blas: [openblas]
+        lapack: [openblas]
+    cuda:
+      externals:
+      - spec: cuda@12.2.0
+        prefix: /leonardo/prod/spack/06/install/0.22/linux-rhel8-icelake/gcc-8.5.0/cuda-12.2.0-o6rr2unwsp4e4av6ukobro6plj7ceeos
+      buildable: false
+    nvhpc:
+      buildable: true
+    openmpi:
+      buildable: true
+      variants:
+      - +cuda
+      - cuda_arch=80
+      - +legacylaunchers
+    openblas:
+      buildable: true
+    nccl:
+      buildable: true
+    cudnn:
+      buildable: true
+    hdf5:
+      buildable: true
+      variants:
+      - +mpi
+      - +fortran
+      - +hl
+    parallel-netcdf:
+      buildable: true
+      variants:
+      - +cxx
+      - +fortran

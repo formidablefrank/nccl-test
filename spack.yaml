@@ -1,0 +1,48 @@
+spack:
+  view: false
+  concretizer:
+    unify: when_possible
+    reuse: true
+  specs:
+  - gcc@12.2.0
+  - nvhpc@25.11
+  - hpcx-mpi@2.25.1
+  - nccl@2.22.3-1 +cuda cuda_arch=80 ^cuda@12.2.0
+  - cudnn@8.9.7.29-12 ^cuda@12.2.0
+  - hdf5@1.14.3 +mpi +fortran +hl %nvhpc@25.11 ^hpcx-mpi@2.25.1
+  - parallel-netcdf@1.12.3 +cxx +fortran %nvhpc@25.11 ^hpcx-mpi@2.25.1
+  packages:
+    all:
+      target: [icelake]
+      providers:
+        mpi: [hpcx-mpi]
+    cuda:
+      externals:
+      - spec: cuda@12.2.0
+        prefix: /leonardo/prod/spack/06/install/0.22/linux-rhel8-icelake/gcc-8.5.0/cuda-12.2.0-o6rr2unwsp4e4av6ukobro6plj7ceeos
+      buildable: false
+    gcc:
+      externals:
+      - spec: gcc@12.2.0
+        prefix: /leonardo/prod/spack/06/install/0.22/linux-rhel8-icelake/gcc-8.5.0/gcc-12.2.0-lkcazt4letxjj4s7nlhzryoyivevsatz
+      buildable: false
+    nvhpc:
+      externals:
+      - spec: nvhpc@25.11
+        prefix: /leonardo/prod/spack/06/install/0.22/linux-rhel8-icelake/gcc-8.5.0/nvhpc-25.11-ayzlbce6ohpmv72ncfv4ogitmppp2usq
+      buildable: false
+    hpcx-mpi:
+      externals:
+      - spec: hpcx-mpi@2.25.1
+        prefix: /leonardo/prod/spack/06/install/0.22/linux-rhel8-icelake/gcc-8.5.0/nvhpc-25.11-ayzlbce6ohpmv72ncfv4ogitmppp2usq/Linux_x86_64/25.11/comm_libs/13.0/hpcx/hpcx-2.25.1/ompi
+      buildable: false
+    nccl:
+      externals:
+      - spec: nccl@2.22.3-1 +cuda cuda_arch=80 ^cuda@12.2.0
+        prefix: /leonardo/prod/spack/06/install/0.22/linux-rhel8-icelake/gcc-12.2.0/nccl-2.22.3-1-7yurwun4kwua24wjthmaf4eruawcscqx
+      buildable: false
+    cudnn:
+      externals:
+      - spec: cudnn@8.9.7.29-12 ^cuda@12.2.0
+        prefix: /leonardo/prod/spack/5.2/install/0.21/linux-rhel8-icelake/gcc-12.2.0/cudnn-8.9.7.29-12-ysaw4ox55ryion4iqvbxv7rbrpm657zu
+      buildable: false

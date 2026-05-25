@@ -20,6 +20,7 @@ source nccl.sh
 export NCCL_DEBUG=INFO
 export NVVL_DEBUG_SUBSYS=ALL
 export NCCL_DEBUG_FILENAME="logs/IB_4_${SLURM_LOCALID}.log"
+export NCCL_TOPO_DUMP_FILE=topo_leo.xml
 #export NCCL_NET="Socket"
 #export NCCL_IB_SL=1
 #export NCCL_IB_ADAPTIVE_ROUTING=0
@@ -27,7 +28,6 @@ export NCCL_DEBUG_FILENAME="logs/IB_4_${SLURM_LOCALID}.log"
 #export NCCL_P2P_LEVEL=NVL
 #export NCCL_ALGO=Ring
 
-export NCCL_TOPO_DUMP_FILE=topo_leo.xml
 
 # nvcc allreduce.c -o allreduce.x -lmpi -lnccl
 mpirun -np 16 ./binder.sh ./allreduce.x 50000000

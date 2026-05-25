@@ -1,2 +1,4 @@
 logs/
 *.x
+.spack-env/
+source-build-env/.spack-env/

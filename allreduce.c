@@ -145,8 +145,8 @@ int main(int argc, char* argv[])
   }
   int device = localRank % deviceCount;
   CUDACHECK(cudaSetDevice(device));
-  CUDACHECK(cudaMalloc(&sendbuff, size * sizeof(float)));
-  CUDACHECK(cudaMalloc(&recvbuff, size * sizeof(float)));
+  CUDACHECK(cudaMalloc((void**) &sendbuff, size * sizeof(float)));
+  CUDACHECK(cudaMalloc((void**) &recvbuff, size * sizeof(float)));
   CUDACHECK(cudaStreamCreate(&s));
 
 
