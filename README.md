@@ -30,8 +30,12 @@ The current source uses a default message size of `32 * 1024 * 1024` floats, but
 - `allreduce.x` - compiled executable
 - `spack.yaml` - Spack environment pinned for Leonardo CUDA 12.2 and A100 (`cuda_arch=80`)
 - `source-build-env/spack.yaml` - alternate Spack environment that keeps `cuda@12.2` external and source-builds the requested HPC packages
+- `hpcx-only-external-env/spack.yaml` - alternate Spack environment that keeps `hpcx-mpi@2.25.1` as the only explicit external package
+- `hpcx-only-env.sh` - helper that exposes the `hpcx-only-external-env` toolchain to the shell
 - `spack-env.sh` - helper that loads the site modules and activates the local Spack environment
 - `build-source-env.sh` - concretizes and installs the alternate source-build environment
+- `build-hpcx-only-env.sh` - concretizes and installs the HPC-X-only-external environment
+- `batch-hpcx-only-env.sh` - Slurm script that builds and runs `allreduce.c` with the HPC-X-only-external environment
 - `build-spack.sh` - concretizes, installs, and builds `allreduce.x`
 - `batch-spack.sh` - Slurm batch script that rebuilds and runs `allreduce.x` with HPC-X MPI
 - `cuda_aware_bcast_pnetcdf.c` - CUDA-aware MPI broadcast example with parallel NetCDF output
@@ -100,6 +104,34 @@ Build that environment with:
 This environment concretizes on Leonardo. Because the site Spack config injects cluster integration defaults for Open MPI, some low-level transitive dependencies such as `glibc`, `slurm`, `pmix`, `ucx`, `ucc`, `hcoll`, `knem`, and `lustre` still resolve as site-managed externals during concretization. The requested top-level HPC packages above are configured to build from source.
 
 Also note that this is a single-pass environment: `nvhpc` itself is built from source, but the other roots concretize with `gcc@12.2.0` unless you do a second bootstrap stage and re-register the freshly installed NVHPC compiler with `spack compiler find`.
+
+## HPC-X-Only External Environment
+
+There is a separate environment in [hpcx-only-external-env/spack.yaml](/leonardo_scratch/large/userexternal/jrayo000/nccl-test/hpcx-only-external-env/spack.yaml:1) where `hpcx-mpi@2.25.1` is the only explicit external package in the environment file.
+
+Build it with:
+
+```bash
+./build-hpcx-only-env.sh
+```
+
+Pinned versions in that environment are:
+
+- `cuda@12.2.2`
+- `nvhpc@25.11 +mpi`
+- `nccl@2.22.3-1 +cuda cuda_arch=80`
+- `cudnn@9.2.0.82-12`
+- `hdf5@1.14.3 +mpi +fortran +hl`
+- `parallel-netcdf@1.12.3 +cxx +fortran`
+- `hpcx-mpi@2.25.1` as the MPI provider external
+
+`cuda@12.2.2` is used here because it is the newest CUDA release in the `spack/0.22-06` package set that matches the Leonardo `535.*` driver line. This environment concretizes successfully and writes [hpcx-only-external-env/spack.lock](/leonardo_scratch/large/userexternal/jrayo000/nccl-test/hpcx-only-external-env/spack.lock:1).
+
+Run `allreduce.c` with this environment using:
+
+```bash
+sbatch batch-hpcx-only-env.sh
+```
 
 If you want the steps separately:
 

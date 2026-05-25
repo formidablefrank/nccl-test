@@ -1,0 +1,41 @@
+spack:
+  view: false
+  concretizer:
+    unify: when_possible
+    reuse: false
+  specs:
+  - cuda@12.2.2
+  - nvhpc@25.11 +mpi default_cuda=12.2
+  - nccl@2.22.3-1 +cuda cuda_arch=80 ^cuda@12.2.2
+  - cudnn@9.2.0.82-12 ^cuda@12.2.2
+  - hdf5@1.14.3 +mpi +fortran +hl %nvhpc@25.11 ^hpcx-mpi@2.25.1
+  - parallel-netcdf@1.12.3 +cxx +fortran %nvhpc@25.11 ^hpcx-mpi@2.25.1
+  packages:
+    all:
+      target: [icelake]
+      providers:
+        mpi: [hpcx-mpi]
+    hpcx-mpi:
+      externals:
+      - spec: hpcx-mpi@2.25.1
+        prefix: /leonardo/prod/spack/06/install/0.22/linux-rhel8-icelake/gcc-8.5.0/nvhpc-25.11-ayzlbce6ohpmv72ncfv4ogitmppp2usq/Linux_x86_64/25.11/comm_libs/13.0/hpcx/hpcx-2.25.1/ompi
+      buildable: false
+    cuda:
+      buildable: true
+    nvhpc:
+      buildable: true
+    nccl:
+      buildable: true
+    cudnn:
+      buildable: true
+    hdf5:
+      buildable: true
+      variants:
+      - +mpi
+      - +fortran
+      - +hl
+    parallel-netcdf:
+      buildable: true
+      variants:
+      - +cxx
+      - +fortran

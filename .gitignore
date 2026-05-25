@@ -2,3 +2,4 @@ logs/
 *.x
 .spack-env/
 source-build-env/.spack-env/
+hpcx-only-external-env/.spack-env/
