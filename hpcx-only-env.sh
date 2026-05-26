@@ -46,11 +46,20 @@ add_prefix() {
   fi
 }
 
+prefix_for() {
+  spack -e "${env_dir}" location -i "$1"
+}
+
 set +u
 module purge
 module load spack/0.22-06
 set -u
 module load hpcx-mpi/2.25.1
+
+export CUDA_HOME="$(prefix_for "cuda@12.2.2")"
+export NVHPC_HOME="$(prefix_for "nvhpc@25.11 +mpi default_cuda=12.2")"
+export NCCL_HOME="$(prefix_for "nccl@2.22.3-1 +cuda cuda_arch=80 ^cuda@12.2.2")"
+export CUDNN_HOME="$(prefix_for "cudnn@9.2.0.82-12 ^cuda@12.2.2")"
 
 add_prefix "cuda@12.2.2"
 add_prefix "nvhpc@25.11 +mpi default_cuda=12.2"
